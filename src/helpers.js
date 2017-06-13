@@ -54,3 +54,7 @@ export function groupByActionTypes (rawActions) {
   const actions = parseActions(rawActions)
   return (action) => actions.indexOf(action.type) >= 0 ? action.type : null
 }
+
+export function deepClone (data) {
+  return JSON.parse(JSON.stringify(data))
+}

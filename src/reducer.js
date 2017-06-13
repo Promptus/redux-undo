@@ -1,6 +1,6 @@
 import * as debug from './debug'
 import { ActionTypes } from './actions'
-import { parseActions, isHistory } from './helpers'
+import { parseActions, isHistory, deepClone } from './helpers'
 
 // lengthWithoutFuture: get length of history
 function lengthWithoutFuture (history) {
@@ -49,7 +49,7 @@ function undo (history) {
   return {
     past: past.slice(0, past.length - 1), // remove last element from past
     present: newPresent, // set element as new present
-    _latestUnfiltered: newPresent,
+    _latestUnfiltered: deepClone(newPresent),
     future: newFuture,
     group: null
   }
@@ -71,7 +71,7 @@ function redo (history) {
   return {
     future: future.slice(1, future.length), // remove element from future
     present: newPresent, // set element as new present
-    _latestUnfiltered: newPresent,
+    _latestUnfiltered: deepClone(newPresent),
     past: newPast,
     group: null
   }
@@ -89,7 +89,7 @@ function jumpToFuture (history, index) {
   return {
     future: future.slice(index + 1),
     present: newPresent,
-    _latestUnfiltered: newPresent,
+    _latestUnfiltered: deepClone(newPresent),
     past: past.concat([_latestUnfiltered]).concat(future.slice(0, index)),
     group: null
 
@@ -110,7 +110,7 @@ function jumpToPast (history, index) {
       .concat([_latestUnfiltered])
       .concat(future),
     present: newPresent,
-    _latestUnfiltered: newPresent,
+    _latestUnfiltered: deepClone(newPresent),
     past: past.slice(0, index),
     group: null
   }
